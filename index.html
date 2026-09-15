@@ -1,110 +1,230 @@
+
 <!DOCTYPE html>
 <html lang="sw">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FACEBOOKA</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FACEBOOKA</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      color: #222;
-    }
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+}
 
-    header {
-      background: #1877f2;
-      color: white;
-      padding: 15px 20px;
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
-    }
+body{
+  background:#f1f3f6;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
 
-    .container {
-      max-width: 500px;
-      margin: 40px auto;
-      padding: 20px;
-    }
+.container{
+  width:100%;
+  max-width:500px;
+  background:white;
+  padding:45px 30px;
+  border-radius:25px;
+  box-shadow:0 5px 25px rgba(0,0,0,.12);
+  text-align:center;
+}
 
-    .card {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+h1{
+  color:#1877f2;
+  font-size:45px;
+  margin-bottom:15px;
+}
 
-    .logo {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      margin-bottom: 15px;
-    }
+.subtitle{
+  color:#555;
+  font-size:20px;
+  line-height:1.5;
+  margin-bottom:35px;
+}
 
-    h1 {
-      color: #1877f2;
-    }
+button{
+  width:100%;
+  border:0;
+  padding:17px;
+  border-radius:12px;
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  margin-top:15px;
+  cursor:pointer;
+}
 
-    p {
-      font-size: 17px;
-      color: #555;
-    }
+.signup{
+  background:#36b82f;
+}
 
-    button {
-      width: 100%;
-      padding: 14px;
-      margin-top: 12px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+.login{
+  background:#1877f2;
+}
 
-    .signup {
-      background: #42b72a;
-      color: white;
-    }
+.form{
+  display:none;
+}
 
-    .login {
-      background: #1877f2;
-      color: white;
-    }
-  </style>
+.form h2{
+  color:#1877f2;
+  margin-bottom:25px;
+}
+
+input{
+  width:100%;
+  padding:15px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:10px;
+  font-size:16px;
+}
+
+.back{
+  background:#777;
+}
+
+.message{
+  margin-top:15px;
+  color:#333;
+  font-weight:bold;
+}
+</style>
 </head>
 
 <body>
 
-  <header>
-    FACEBOOKA
-  </header>
+<div class="container">
 
-  <div class="container">
-    <div class="card">
+  <!-- HOME -->
+  <div id="home">
+    <h1>Karibu<br>FACEBOOKA</h1>
 
-      <h1>Karibu FACEBOOKA</h1>
+    <p class="subtitle">
+      Unganisha • Shiriki • Jenga<br><br>
+      Jiunge na marafiki, shiriki picha na video,
+      na zungumza na watu mtandaoni.
+    </p>
 
-      <p>
-        Unganisha • Shiriki • Jenga
-      </p>
+    <button class="signup" onclick="showSignup()">
+      FUNGUA AKAUNTI
+    </button>
 
-      <p>
-        Jiunge na marafiki, shiriki picha na video,
-        na zungumza na watu mtandaoni.
-      </p>
-
-      <button class="signup">
-        FUNGUA AKAUNTI
-      </button>
-
-      <button class="login">
-        INGIА
-      </button>
-
-    </div>
+    <button class="login" onclick="showLogin()">
+      INGIA
+    </button>
   </div>
+
+  <!-- SIGN UP -->
+  <div id="signupForm" class="form">
+    <h2>Fungua Akaunti</h2>
+
+    <input id="signupName" type="text" placeholder="Jina lako">
+
+    <input id="signupEmail" type="email" placeholder="Email">
+
+    <input id="signupPassword" type="password" placeholder="Password">
+
+    <button class="signup" onclick="signup()">
+      JISAJILI
+    </button>
+
+    <button class="back" onclick="goHome()">
+      RUDI
+    </button>
+
+    <div id="signupMessage" class="message"></div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginForm" class="form">
+    <h2>Ingia FACEBOOKA</h2>
+
+    <input id="loginEmail" type="email" placeholder="Email">
+
+    <input id="loginPassword" type="password" placeholder="Password">
+
+    <button class="login" onclick="login()">
+      INGIA
+    </button>
+
+    <button class="back" onclick="goHome()">
+      RUDI
+    </button>
+
+    <div id="loginMessage" class="message"></div>
+  </div>
+
+</div>
+
+<script>
+
+function showSignup(){
+  document.getElementById("home").style.display="none";
+  document.getElementById("loginForm").style.display="none";
+  document.getElementById("signupForm").style.display="block";
+}
+
+function showLogin(){
+  document.getElementById("home").style.display="none";
+  document.getElementById("signupForm").style.display="none";
+  document.getElementById("loginForm").style.display="block";
+}
+
+function goHome(){
+  document.getElementById("home").style.display="block";
+  document.getElementById("signupForm").style.display="none";
+  document.getElementById("loginForm").style.display="none";
+}
+
+function signup(){
+
+  let name=document.getElementById("signupName").value;
+  let email=document.getElementById("signupEmail").value;
+  let password=document.getElementById("signupPassword").value;
+
+  if(name==="" || email==="" || password===""){
+    document.getElementById("signupMessage").innerText=
+    "Tafadhali jaza taarifa zote.";
+    return;
+  }
+
+  localStorage.setItem("facebookaName",name);
+  localStorage.setItem("facebookaEmail",email);
+  localStorage.setItem("facebookaPassword",password);
+
+  document.getElementById("signupMessage").innerText=
+  "Akaunti imefunguliwa! Sasa unaweza kuingia.";
+
+}
+
+function login(){
+
+  let email=document.getElementById("loginEmail").value;
+  let password=document.getElementById("loginPassword").value;
+
+  let savedEmail=localStorage.getItem("facebookaEmail");
+  let savedPassword=localStorage.getItem("facebookaPassword");
+
+  if(email===savedEmail && password===savedPassword){
+
+    document.getElementById("loginMessage").innerText=
+    "Umeingia FACEBOOKA vizuri!";
+
+  }else{
+
+    document.getElementById("loginMessage").innerText=
+    "Email au password si sahihi.";
+
+  }
+
+}
+
+</script>
 
 </body>
 </html>
