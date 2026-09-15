@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="sw">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FACEBOOKA</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 *{
@@ -27,7 +28,7 @@ body{
   width:100%;
   max-width:500px;
   background:white;
-  padding:45px 30px;
+  padding:40px 30px;
   border-radius:25px;
   box-shadow:0 5px 25px rgba(0,0,0,.12);
   text-align:center;
@@ -66,6 +67,10 @@ button{
   background:#1877f2;
 }
 
+.back{
+  background:#777;
+}
+
 .form{
   display:none;
 }
@@ -84,14 +89,11 @@ input{
   font-size:16px;
 }
 
-.back{
-  background:#777;
-}
-
 .message{
   margin-top:15px;
   color:#333;
   font-weight:bold;
+  line-height:1.5;
 }
 </style>
 </head>
@@ -100,7 +102,6 @@ input{
 
 <div class="container">
 
-  <!-- HOME -->
   <div id="home">
     <h1>Karibu<br>FACEBOOKA</h1>
 
@@ -119,15 +120,25 @@ input{
     </button>
   </div>
 
-  <!-- SIGN UP -->
+
   <div id="signupForm" class="form">
+
     <h2>Fungua Akaunti</h2>
 
-    <input id="signupName" type="text" placeholder="Jina lako">
+    <input
+      id="signupName"
+      type="text"
+      placeholder="Jina lako">
 
-    <input id="signupEmail" type="email" placeholder="Email">
+    <input
+      id="signupEmail"
+      type="email"
+      placeholder="Email">
 
-    <input id="signupPassword" type="password" placeholder="Password">
+    <input
+      id="signupPassword"
+      type="password"
+      placeholder="Password">
 
     <button class="signup" onclick="signup()">
       JISAJILI
@@ -138,15 +149,23 @@ input{
     </button>
 
     <div id="signupMessage" class="message"></div>
+
   </div>
 
-  <!-- LOGIN -->
+
   <div id="loginForm" class="form">
+
     <h2>Ingia FACEBOOKA</h2>
 
-    <input id="loginEmail" type="email" placeholder="Email">
+    <input
+      id="loginEmail"
+      type="email"
+      placeholder="Email">
 
-    <input id="loginPassword" type="password" placeholder="Password">
+    <input
+      id="loginPassword"
+      type="password"
+      placeholder="Password">
 
     <button class="login" onclick="login()">
       INGIA
@@ -157,70 +176,189 @@ input{
     </button>
 
     <div id="loginMessage" class="message"></div>
+
   </div>
 
 </div>
 
+
 <script>
 
+/* SUPABASE */
+
+const SUPABASE_URL =
+"https://rtkmtafntstvdodgkfcv.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_SVZgmsCL0QpRcMsgUCBdUw_OYM11kmF";
+
+const supabaseClient =
+supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+/* PAGE NAVIGATION */
+
 function showSignup(){
+
   document.getElementById("home").style.display="none";
+
   document.getElementById("loginForm").style.display="none";
+
   document.getElementById("signupForm").style.display="block";
 }
 
+
 function showLogin(){
+
   document.getElementById("home").style.display="none";
+
   document.getElementById("signupForm").style.display="none";
+
   document.getElementById("loginForm").style.display="block";
 }
 
+
 function goHome(){
+
   document.getElementById("home").style.display="block";
+
   document.getElementById("signupForm").style.display="none";
+
   document.getElementById("loginForm").style.display="none";
 }
 
-function signup(){
 
-  let name=document.getElementById("signupName").value;
-  let email=document.getElementById("signupEmail").value;
-  let password=document.getElementById("signupPassword").value;
+/* SIGN UP */
 
-  if(name==="" || email==="" || password===""){
-    document.getElementById("signupMessage").innerText=
-    "Tafadhali jaza taarifa zote.";
+async function signup(){
+
+  const name =
+    document.getElementById("signupName").value.trim();
+
+  const email =
+    document.getElementById("signupEmail").value.trim();
+
+  const password =
+    document.getElementById("signupPassword").value;
+
+  const message =
+    document.getElementById("signupMessage");
+
+
+  if(
+    name === "" ||
+    email === "" ||
+    password === ""
+  ){
+
+    message.innerText =
+      "Tafadhali jaza taarifa zote.";
+
     return;
   }
 
-  localStorage.setItem("facebookaName",name);
-  localStorage.setItem("facebookaEmail",email);
-  localStorage.setItem("facebookaPassword",password);
 
-  document.getElementById("signupMessage").innerText=
-  "Akaunti imefunguliwa! Sasa unaweza kuingia.";
+  if(password.length < 6){
 
+    message.innerText =
+      "Password iwe na angalau herufi 6.";
+
+    return;
+  }
+
+
+  message.innerText =
+    "Tafadhali subiri...";
+
+
+  const { data, error } =
+    await supabaseClient.auth.signUp({
+
+      email: email,
+
+      password: password,
+
+      options: {
+
+        data: {
+          full_name: name
+        }
+
+      }
+
+    });
+
+
+  if(error){
+
+    message.innerText =
+      "Usajili umeshindikana: " +
+      error.message;
+
+    return;
+  }
+
+
+  message.innerText =
+    "Akaunti imefunguliwa! 🎉";
 }
 
-function login(){
 
-  let email=document.getElementById("loginEmail").value;
-  let password=document.getElementById("loginPassword").value;
+/* LOGIN */
 
-  let savedEmail=localStorage.getItem("facebookaEmail");
-  let savedPassword=localStorage.getItem("facebookaPassword");
+async function login(){
 
-  if(email===savedEmail && password===savedPassword){
+  const email =
+    document.getElementById("loginEmail").value.trim();
 
-    document.getElementById("loginMessage").innerText=
-    "Umeingia FACEBOOKA vizuri!";
+  const password =
+    document.getElementById("loginPassword").value;
 
-  }else{
+  const message =
+    document.getElementById("loginMessage");
 
-    document.getElementById("loginMessage").innerText=
-    "Email au password si sahihi.";
 
+  if(
+    email === "" ||
+    password === ""
+  ){
+
+    message.innerText =
+      "Tafadhali jaza email na password.";
+
+    return;
   }
+
+
+  message.innerText =
+    "Tafadhali subiri...";
+
+
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+
+      email: email,
+
+      password: password
+
+    });
+
+
+  if(error){
+
+    message.innerText =
+      "Login imeshindikana: " +
+      error.message;
+
+    return;
+  }
+
+
+  message.innerText =
+    "Umeingia FACEBOOKA vizuri! 🎉";
 
 }
 
